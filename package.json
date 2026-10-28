@@ -1,0 +1,12 @@
+{
+  "name": "bharani-studio-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-first ad landing page for Bharani Studio, Nellore. Plain HTML, CSS and JS: no build step.",
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "localize-images": "node scripts/localize-images.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
