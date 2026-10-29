@@ -2,12 +2,10 @@
 (() => {
   'use strict';
 
-  /* ---------- Config: change here if the number ever changes ---------- */
-  const WHATSAPP_NUMBER = '919908996227'; // country code + number, no "+" or spaces
-
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   document.documentElement.classList.add('js');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   /* ---------- Ad tracking helpers ----------
      Sends the same event to GTM (dataLayer), GA4 (gtag) and Meta Pixel (fbq)
@@ -76,10 +74,56 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.01 });
     revealItems.forEach((item) => revealObserver.observe(item));
   } else {
     revealItems.forEach((item) => item.classList.add('is-visible'));
+  }
+
+  /* ---------- Scroll-driven photo spread ----------
+     Scroll and resize only schedule one animation frame. The browser retains
+     native touch scrolling; reduced-motion visitors see the finished layout. */
+  const moments = $('#moments');
+  const stage = $('#moments-stage');
+  if (moments && stage) {
+    const cards = $$('.memory', stage);
+    const words = $('.moments__words', stage);
+    let framePending = false;
+    let nearby = true;
+    const drawSpread = () => {
+      framePending = false;
+      const rect = moments.getBoundingClientRect();
+      const sticky = $('.moments__sticky', moments);
+      const top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--top-h')) || 96;
+      const range = Math.max(1, rect.height - sticky.offsetHeight);
+      const progress = reducedMotion.matches ? 1 : Math.max(0, Math.min(1, (top - rect.top) / range));
+      const spread = Math.max(0, Math.min(1, (progress - 0.02) / 0.8));
+      const eased = 1 - Math.pow(1 - spread, 3);
+      cards.forEach((card, index) => {
+        const x = Number(card.dataset.x) * stage.clientWidth / 100 * eased;
+        const y = Number(card.dataset.y) * stage.clientHeight / 100 * eased;
+        const rotation = Number(card.dataset.rotate) * (0.35 + 0.65 * eased);
+        const scale = 1.45 - 0.45 * eased;
+        card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotation}deg) scale(${scale})`;
+        card.style.zIndex = String(7 - index);
+      });
+      words.style.opacity = String(Math.max(0, Math.min(1, (spread - 0.18) * 2.8)));
+    };
+    const scheduleSpread = () => {
+      if (framePending || !nearby) return;
+      framePending = true;
+      window.requestAnimationFrame(drawSpread);
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        nearby = entry.isIntersecting;
+        if (nearby) scheduleSpread();
+      }, { rootMargin: '150px' }).observe(moments);
+    }
+    window.addEventListener('scroll', scheduleSpread, { passive: true });
+    window.addEventListener('resize', scheduleSpread);
+    reducedMotion.addEventListener('change', scheduleSpread);
+    drawSpread();
   }
 
   /* ---------- Portfolio filters ---------- */
@@ -90,13 +134,18 @@
     filterButtons.forEach((item) => {
       const active = item === button;
       item.classList.toggle('is-active', active);
-      item.setAttribute('aria-selected', String(active));
+      item.setAttribute('aria-pressed', String(active));
     });
     galleryTiles.forEach((tile) => {
       const visible = filter === 'all' || tile.dataset.category === filter;
       tile.classList.toggle('is-hidden', !visible);
       tile.setAttribute('aria-hidden', String(!visible));
     });
+    const visibleCount = galleryTiles.filter(tile => !tile.classList.contains('is-hidden')).length;
+    const emptyState = $('#gallery-empty');
+    if (emptyState) emptyState.hidden = visibleCount > 0;
+    const galleryStatus = $('#gallery-status');
+    if (galleryStatus) galleryStatus.textContent = visibleCount ? `${visibleCount} ${filter === 'all' ? '' : filter + ' '}photographs shown.` : 'Ask us for our corporate photography portfolio on WhatsApp.';
     track('gallery_filter', { label: filter });
   }));
 
@@ -148,16 +197,19 @@
     });
   }
 
-  /* ---------- Review carousel ---------- */
+  /* ---------- Reviews: manual/swipe controls and opt-in auto rotation ---------- */
   const reviewSlides = $$('.review-slide');
   const reviewDots = $$('.review-dot');
   const reviewPause = $('#review-pause');
   if (reviewSlides.length && reviewDots.length) {
     let reviewIndex = 0;
     let reviewTimer = null;
-    let reviewPaused = false;
+    let reviewPaused = true;
+    const reviewCarousel = $('#review-carousel');
 
     const showReview = (nextIndex) => {
+      // Keep the carousel's top in place when changing photo aspect ratios.
+      const previousTop = reviewCarousel.getBoundingClientRect().top;
       reviewIndex = (nextIndex + reviewSlides.length) % reviewSlides.length;
       reviewSlides.forEach((slide, index) => {
         const active = index === reviewIndex;
@@ -167,8 +219,10 @@
       reviewDots.forEach((dot, index) => {
         const active = index === reviewIndex;
         dot.classList.toggle('is-active', active);
-        dot.setAttribute('aria-selected', String(active));
+        dot.setAttribute('aria-pressed', String(active));
       });
+      const currentTop = reviewCarousel.getBoundingClientRect().top;
+      if (previousTop < 100 && currentTop !== previousTop) window.scrollBy(0, currentTop - previousTop);
     };
     const startReviewTimer = () => {
       window.clearInterval(reviewTimer);
@@ -181,6 +235,9 @@
       startReviewTimer();
     }));
     if (reviewPause) {
+      reviewPause.setAttribute('aria-pressed', 'true');
+      reviewPause.setAttribute('aria-label', 'Play review rotation');
+      reviewPause.textContent = '▶';
       reviewPause.addEventListener('click', () => {
         reviewPaused = !reviewPaused;
         reviewPause.setAttribute('aria-pressed', String(reviewPaused));
@@ -189,50 +246,31 @@
         startReviewTimer();
       });
     }
+    $('#review-prev')?.addEventListener('click', () => { showReview(reviewIndex - 1); startReviewTimer(); });
+    $('#review-next')?.addEventListener('click', () => { showReview(reviewIndex + 1); startReviewTimer(); });
+    let reviewTouch = null;
+    reviewCarousel.addEventListener('touchstart', event => {
+      reviewTouch = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    }, { passive: true });
+    reviewCarousel.addEventListener('touchend', event => {
+      if (!reviewTouch) return;
+      const dx = event.changedTouches[0].clientX - reviewTouch.x;
+      const dy = event.changedTouches[0].clientY - reviewTouch.y;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) {
+        showReview(reviewIndex + (dx < 0 ? 1 : -1));
+        startReviewTimer();
+      }
+      reviewTouch = null;
+    }, { passive: true });
+    reviewCarousel.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') showReview(reviewIndex - 1);
+      if (event.key === 'ArrowRight') showReview(reviewIndex + 1);
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) window.clearInterval(reviewTimer);
+      else startReviewTimer();
+    });
+    reducedMotion.addEventListener('change', startReviewTimer);
     startReviewTimer();
-  }
-
-  /* ---------- Enquiry form -> WhatsApp ---------- */
-  const form = $('#enquiry');
-  if (form) {
-    const dateInput = $('#f-date', form);
-    const nameInput = $('#f-name', form);
-    const nameErr = $('#f-name-err', form);
-
-    // no point picking a date in the past
-    const now = new Date();
-    dateInput.min = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-    nameInput.addEventListener('input', () => {
-      nameInput.removeAttribute('aria-invalid');
-      nameErr.textContent = '';
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = nameInput.value.trim();
-      if (!name) {
-        nameInput.setAttribute('aria-invalid', 'true');
-        nameErr.textContent = 'Please add your name so we know who to reply to.';
-        nameInput.focus();
-        return;
-      }
-      const type = $('#f-type', form).value;
-      let when = 'Not decided yet';
-      if (dateInput.value) {
-        const [y, m, d] = dateInput.value.split('-').map(Number);
-        when = new Date(y, m - 1, d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-      }
-      const text =
-        `Hi Bharani Studio, I'm ${name}.\n` +
-        `Planning: ${type}\n` +
-        `When: ${when}\n` +
-        `Could you share your availability?` + refTag();
-
-      track('form_submit', { label: type });
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-      const win = window.open(url, '_blank', 'noopener');
-      if (!win) window.location.href = url; // popup blocked: navigate instead
-    });
   }
 })();

@@ -18,15 +18,18 @@ Open it on your phone too: use your laptop's IP, e.g. `http://192.168.1.20:5173`
 
 ## Photos
 
-The photos are linked directly from `bharanistudio.lovable.app` so the page looks complete
-straight away. **Before deploying, save them into the project** so the page doesn't depend on
-their site (internet on, once):
+Studio website photographs are stored in `assets/img/photos/`, and public Instagram
+photographs in `assets/img/instagram/`. The page serves images locally, so it doesn't
+depend on external image hosts or expiring Instagram URLs. Original source links
+and the review content document are recorded in `assets/img/SOURCES.md`.
+
+If adding more remote studio website images, download them with:
 
 ```bash
 npm run localize-images
 ```
 
-This downloads all 10 photos to `assets/img/photos/` and rewrites `index.html` to use them.
+This downloads remote studio photos to `assets/img/photos/` and updates the HTML.
 Want to swap a photo? Replace the `src` (and `data-full` for gallery tiles) in `index.html`.
 
 ## What to edit
@@ -34,10 +37,10 @@ Want to swap a photo? Replace the `src` (and `data-full` for gallery tiles) in `
 | What | Where |
 | --- | --- |
 | Copy, buttons, links | `index.html` (each section is commented) |
-| WhatsApp number | `index.html` (search `919908996227`) and `WHATSAPP_NUMBER` at the top of `assets/js/main.js` |
+| WhatsApp number | `index.html` (search `919908996227`) |
 | Review copy and bylines | `index.html`, the `.review-slide` blocks in the review carousel |
 | Colours | `assets/css/styles.css`, the `:root` tokens at the top |
-| Theme | `<html data-theme="earthy">` → `"olive"` or `"light"` (your other two mockups) |
+| Scroll-spread photo positions | `index.html`, each `.memory` element's `data-x`, `data-y`, and `data-rotate` |
 | Open Graph image URL | `index.html`, replace `YOUR-DOMAIN` after you deploy |
 
 ## Ads and tracking
@@ -62,9 +65,19 @@ index.html
 assets/
   css/styles.css
   js/main.js
-  fonts/        Hanken Grotesk (headings and text) + Gloock (editorial quotes), self-hosted
-  img/          logo (vector), favicon, share image, photos/ after localising
+  fonts/        Gloock (headings/quotes) + Hanken Grotesk (text), self-hosted
+  img/          logo, favicon, share image, photos/, instagram/, SOURCES.md
 scripts/
   serve.mjs             local preview server
   localize-images.mjs   saves the photos locally
+  inspect-mobile.mjs    browser screenshots and responsive checks (optional Playwright)
 ```
+
+The photo spread follows native scrolling and respects reduced motion. Reviews
+start paused, support swipe, arrows, dots, and optional automatic rotation. All
+four reviews use the supplied document's copy. Corporate images were not supplied;
+the Corporate filter offers a WhatsApp request rather than mislabelling wedding photos.
+
+For browser QA, use an existing Playwright installation (or set `BHARANI_PLAYWRIGHT`
+to its `index.mjs` path), start the local server, and run `node scripts/inspect-mobile.mjs`.
+Screenshots are saved to the ignored `.preview/` folder.
