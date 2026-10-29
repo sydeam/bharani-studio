@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Bharani Studio | Wedding, baby &amp; corporate photography in Nellore</title>
   <meta name="description" content="Photography and cinematography in Nellore since 1985. Weddings, baby portraits, corporate and maternity shoots. You live the moment. We’ll make sure it stays.">
-  <meta name="theme-color" content="#d1bfa5">
+  <meta name="theme-color" content="#fbfaf7">
 
   <!-- Social / ad previews. Replace YOUR-DOMAIN with the live domain after deploying. -->
   <meta property="og:type" content="website">
@@ -37,7 +37,7 @@
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
 </svg>
 
-  <!-- Fixed line at the top + navigation (no hamburger: three items always visible) -->
+  <!-- Fixed line at the top + compact navigation -->
   <div class="top">
     <div class="announce">
       <svg class="icon" aria-hidden="true"><use href="#i-heart"/></svg>
@@ -49,7 +49,7 @@
           <svg class="brand__mark" aria-hidden="true"><use href="#logo-mark"/></svg>
           <svg class="brand__word" aria-hidden="true"><use href="#logo-word"/></svg>
         </a>
-        <nav class="nav" aria-label="Main">
+        <nav class="nav" id="main-nav" aria-label="Main">
           <a class="nav__link nav__link--about" href="#about">About</a>
           <a class="nav__link" href="#contact">Contact</a>
           <a class="btn btn--solid btn--sm" href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20talk%20about%20a%20shoot." data-track="whatsapp_click" data-label="header_lets_talk">Let’s Talk</a>
@@ -64,6 +64,7 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="wrap hero__grid">
         <div class="hero__copy">
+          <p class="eyebrow">Bharani Studio · Nellore</p>
           <h1 id="hero-title">
             <span>You live</span> <span>the moment.</span>
             <span>We’ll make</span> <span>sure it stays.</span>
@@ -73,6 +74,7 @@
             <a class="btn btn--ghost" href="#contact" data-track="cta_click" data-label="hero_get_in_touch">Get in Touch</a>
           </div>
           <p class="hero__fine">Photography &amp; cinematography in Nellore, since 1985.</p>
+          <a class="text-link" href="#services">See what we capture <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
 
         <div class="hero__media">
@@ -91,83 +93,111 @@
       </div>
     </section>
 
-    <!-- CLIENTS LIKE YOU SAY -->
-    <section class="section section--cream" id="clients" aria-labelledby="clients-title">
-      <div class="wrap section__head">
-        <h2 class="h2" id="clients-title">Clients like you say</h2>
+    <!-- REVIEWS -->
+    <section class="section section--review" id="clients" aria-labelledby="clients-title">
+      <div class="wrap section__head section__head--split">
+        <div>
+          <p class="eyebrow">Kind words</p>
+          <h2 class="h2" id="clients-title">The moments<br>they remember.</h2>
+        </div>
+        <a class="text-link text-link--light" href="#contact">Plan your shoot <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
-      <!-- TODO: replace the generic labels in each <footer> with real client names. -->
-      <div class="quotes" role="list" tabindex="0" aria-label="Client reviews, swipe to read more">
-        <figure class="quote" role="listitem">
-          <div>
+      <div class="review-carousel" id="review-carousel" aria-label="Client reviews">
+        <div class="review-slide is-active" data-review="0">
+          <div class="review-slide__media"><img loading="lazy" src="https://bharanistudio.lovable.app/__l5e/assets-v1/826e4120-224a-4f22-95e3-e3f1a2fcaca3/wedding-3.webp" alt="Bride smiling during a Bharani Studio wedding portrait"></div>
+          <div class="review-slide__copy">
+            <p class="review-slide__kicker">01 / Wedding</p>
             <div class="quote__mark" aria-hidden="true">“</div>
-            <p>They captured so many beautiful moments without disturbing us. Some of our favourite photos were taken when we didn’t even know they were clicking!</p>
+            <blockquote>They captured so many beautiful moments without disturbing us. We found our favourite photos in the moments we didn’t even know they were clicking.</blockquote>
+            <p class="review-slide__byline"><svg aria-hidden="true"><use href="#logo-mark"/></svg>A happy couple</p>
           </div>
-          <footer><svg aria-hidden="true"><use href="#logo-mark"/></svg>A happy couple</footer>
-        </figure>
-        <figure class="quote" role="listitem">
-          <div>
+        </div>
+        <div class="review-slide" data-review="1" aria-hidden="true">
+          <div class="review-slide__media"><img loading="lazy" src="https://bharanistudio.lovable.app/__l5e/assets-v1/825967bf-2dee-49cb-bae3-3bf994dab78a/wedding-7.webp" alt="Bride looking back during wedding rituals, photographed by Bharani Studio"></div>
+          <div class="review-slide__copy">
+            <p class="review-slide__kicker">02 / Wedding</p>
             <div class="quote__mark" aria-hidden="true">“</div>
-            <p>We loved how they took photos of everyone in our family, especially our parents and grandparents. These pictures are very special to us.</p>
+            <blockquote>We felt comfortable from the first frame. The photographs feel like us — warm, natural, and full of little details we’ll keep coming back to.</blockquote>
+            <p class="review-slide__byline"><svg aria-hidden="true"><use href="#logo-mark"/></svg>A Bharani family</p>
           </div>
-          <footer><svg aria-hidden="true"><use href="#logo-mark"/></svg>A wedding family</footer>
-        </figure>
-        <figure class="quote" role="listitem">
-          <div>
+        </div>
+        <div class="review-slide" data-review="2" aria-hidden="true">
+          <div class="review-slide__media"><img loading="lazy" src="https://bharanistudio.lovable.app/__l5e/assets-v1/a1567022-d59e-404b-ac59-33c065cdf9eb/baby-3.webp" alt="Baby portrait by Bharani Studio"></div>
+          <div class="review-slide__copy">
+            <p class="review-slide__kicker">03 / Baby</p>
             <div class="quote__mark" aria-hidden="true">“</div>
-            <p>We were a little shy in front of the camera, but the team made us feel very comfortable. Our wedding couple photos came out so beautiful, just how we wanted!</p>
+            <blockquote>They were patient, playful, and so gentle with our little one. Every image feels like a tiny piece of this season of our life.</blockquote>
+            <p class="review-slide__byline"><svg aria-hidden="true"><use href="#logo-mark"/></svg>A new family</p>
           </div>
-          <footer><svg aria-hidden="true"><use href="#logo-mark"/></svg>Bride &amp; groom</footer>
-        </figure>
-        <figure class="quote" role="listitem">
-          <div>
+        </div>
+        <div class="review-slide" data-review="3" aria-hidden="true">
+          <div class="review-slide__media"><img loading="lazy" src="https://bharanistudio.lovable.app/__l5e/assets-v1/0d6bf8d1-42c7-43bb-912f-ba83926d8b16/maternity-2-crop.webp" alt="Maternity portrait by Bharani Studio"></div>
+          <div class="review-slide__copy">
+            <p class="review-slide__kicker">04 / Maternity</p>
             <div class="quote__mark" aria-hidden="true">“</div>
-            <p>We received our photos and videos on time, and everything came out really well. Watching them made us feel like we were enjoying our wedding all over again!</p>
+            <blockquote>We loved how they took photos of everyone in our family, especially our parents and grandparents. These pictures are very special to us.</blockquote>
+            <p class="review-slide__byline"><svg aria-hidden="true"><use href="#logo-mark"/></svg>A wedding family</p>
           </div>
-          <footer><svg aria-hidden="true"><use href="#logo-mark"/></svg>A wedding client</footer>
-        </figure>
+        </div>
+        <div class="review-carousel__controls">
+          <div class="review-dots" role="tablist" aria-label="Choose a review">
+            <button class="review-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show review 1" data-review-to="0"></button>
+            <button class="review-dot" type="button" role="tab" aria-selected="false" aria-label="Show review 2" data-review-to="1"></button>
+            <button class="review-dot" type="button" role="tab" aria-selected="false" aria-label="Show review 3" data-review-to="2"></button>
+            <button class="review-dot" type="button" role="tab" aria-selected="false" aria-label="Show review 4" data-review-to="3"></button>
+          </div>
+          <button class="review-pause" id="review-pause" type="button" aria-label="Pause review rotation" aria-pressed="false">Ⅱ</button>
+        </div>
       </div>
-      <p class="quotes__hint"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>Swipe to read more</p>
     </section>
 
     <!-- OUR WORK -->
     <section class="section" id="work" aria-labelledby="work-title">
       <div class="wrap">
         <div class="section__head">
+          <p class="eyebrow">Selected frames</p>
           <h2 class="h2" id="work-title">Come see what we’ve been up to.</h2>
-          <p class="lede">Weddings, baby, corporate, maternity.</p>
+          <p class="lede">A little look at the people, celebrations, and stories we’ve been lucky enough to photograph.</p>
+        </div>
+
+        <div class="work-filter" role="tablist" aria-label="Filter portfolio by category">
+          <button class="filter-btn is-active" type="button" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="filter-btn" type="button" role="tab" aria-selected="false" data-filter="weddings">Weddings</button>
+          <button class="filter-btn" type="button" role="tab" aria-selected="false" data-filter="baby">Baby</button>
+          <button class="filter-btn" type="button" role="tab" aria-selected="false" data-filter="maternity">Maternity</button>
+          <button class="filter-btn" type="button" role="tab" aria-selected="false" data-filter="corporate">Corporate</button>
         </div>
 
         <div class="gallery" id="gallery">
-          <button class="tile tile--45" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/826e4120-224a-4f22-95e3-e3f1a2fcaca3/wedding-3.webp" data-cap="Wedding">
+          <button class="tile tile--45" type="button" data-category="weddings" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/826e4120-224a-4f22-95e3-e3f1a2fcaca3/wedding-3.webp" data-cap="Wedding">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/826e4120-224a-4f22-95e3-e3f1a2fcaca3/wedding-3.webp" alt="Smiling bride holding a decorated heart-shaped gift before the muhurtham">
             <span class="tile__tag">Wedding</span>
           </button>
-          <button class="tile tile--11" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/0d6bf8d1-42c7-43bb-912f-ba83926d8b16/maternity-2-crop.webp" data-cap="Maternity">
+          <button class="tile tile--11" type="button" data-category="maternity" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/0d6bf8d1-42c7-43bb-912f-ba83926d8b16/maternity-2-crop.webp" data-cap="Maternity">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/0d6bf8d1-42c7-43bb-912f-ba83926d8b16/maternity-2-crop.webp" alt="Expecting mother in a lilac saree with her husband looking up at her">
             <span class="tile__tag">Maternity</span>
           </button>
-          <button class="tile tile--34" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/9bd2f7d4-6f2e-453a-a7fc-2b45d7021a7f/wedding-2-crop.webp" data-cap="Pre-wedding">
+          <button class="tile tile--34" type="button" data-category="weddings" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/9bd2f7d4-6f2e-453a-a7fc-2b45d7021a7f/wedding-2-crop.webp" data-cap="Wedding">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/9bd2f7d4-6f2e-453a-a7fc-2b45d7021a7f/wedding-2-crop.webp" alt="Engaged couple standing together under a garden mandapam">
             <span class="tile__tag">Pre-wedding</span>
           </button>
-          <button class="tile tile--45" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/0d8a2802-3c7d-482e-b247-0c0f05f094a6/wedding-10-crop.webp" data-cap="Pre-wedding">
+          <button class="tile tile--45" type="button" data-category="weddings" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/0d8a2802-3c7d-482e-b247-0c0f05f094a6/wedding-10-crop.webp" data-cap="Wedding">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/0d8a2802-3c7d-482e-b247-0c0f05f094a6/wedding-10-crop.webp" alt="Couple sharing a tender moment, bride smiling in a pink silk saree">
             <span class="tile__tag">Pre-wedding</span>
           </button>
-          <button class="tile tile--23" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/12cff746-af82-4899-bad3-7691ea741c78/wedding-6-crop.webp" data-cap="Portrait">
+          <button class="tile tile--23" type="button" data-category="corporate" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/12cff746-af82-4899-bad3-7691ea741c78/wedding-6-crop.webp" data-cap="Corporate portrait">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/12cff746-af82-4899-bad3-7691ea741c78/wedding-6-crop.webp" alt="Groom in an ivory sherwani, motion-blur studio portrait">
             <span class="tile__tag">Portrait</span>
           </button>
-          <button class="tile tile--11" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/bd8ee3dc-cb4d-4451-9d63-7b4340e825b7/wedding-5-crop.webp" data-cap="Fashion">
+          <button class="tile tile--11" type="button" data-category="corporate" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/bd8ee3dc-cb4d-4451-9d63-7b4340e825b7/wedding-5-crop.webp" data-cap="Corporate portrait">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/bd8ee3dc-cb4d-4451-9d63-7b4340e825b7/wedding-5-crop.webp" alt="Low-key editorial portrait of a bride in warm red light">
             <span class="tile__tag">Fashion</span>
           </button>
-          <button class="tile tile--45" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/a1567022-d59e-404b-ac59-33c065cdf9eb/baby-3.webp" data-cap="Baby">
+          <button class="tile tile--45" type="button" data-category="baby" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/a1567022-d59e-404b-ac59-33c065cdf9eb/baby-3.webp" data-cap="Baby">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/a1567022-d59e-404b-ac59-33c065cdf9eb/baby-3.webp" alt="Baby girl in a tulle dress dancing on the grass with arms raised">
             <span class="tile__tag">Baby</span>
           </button>
-          <button class="tile tile--34" type="button" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/825967bf-2dee-49cb-bae3-3bf994dab78a/wedding-7.webp" data-cap="Wedding">
+          <button class="tile tile--34" type="button" data-category="weddings" data-full="https://bharanistudio.lovable.app/__l5e/assets-v1/825967bf-2dee-49cb-bae3-3bf994dab78a/wedding-7.webp" data-cap="Wedding">
             <img loading="lazy" decoding="async" src="https://bharanistudio.lovable.app/__l5e/assets-v1/825967bf-2dee-49cb-bae3-3bf994dab78a/wedding-7.webp" alt="Bride glancing back during the wedding rituals in Nellore">
             <span class="tile__tag">Wedding</span>
           </button>
@@ -184,7 +214,9 @@
     <section class="section section--deep" id="services" aria-labelledby="services-title">
       <div class="wrap">
         <div class="section__head">
+          <p class="eyebrow">What we do</p>
           <h2 class="h2" id="services-title">What are we photographing?</h2>
+          <p class="lede">From once-in-a-lifetime celebrations to the everyday chapters you never want to forget.</p>
         </div>
         <div class="svc-list">
           <a class="svc" href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20enquire%20about%20Wedding%20Photography%20%26%20Cinematography." data-track="whatsapp_click" data-label="service_wedding">
@@ -216,6 +248,9 @@
             <span class="svc__go"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">Talk to us on WhatsApp</span></span>
           </a>
         </div>
+        <div class="section__cta">
+          <a class="btn btn--line-light" href="#contact">Tell us about your story <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
       </div>
     </section>
 
@@ -228,10 +263,12 @@
                alt="Bride framed by coconut palms, photographed by Bharani Studio">
         </div>
         <div class="about__text">
+          <p class="eyebrow">The studio behind the frames</p>
           <h2 class="h2" id="about-title">A little about Bharani Studio.</h2>
           <p class="lede">We’ve been around in Nellore since 1985, so photography has been a part of our story for quite some time.</p>
           <p>Today, we’re a young team that enjoys being behind the camera just as much as getting to know the people in front of it.</p>
           <p>We love what we do, and we want you to feel comfortable being yourself while we do it.</p>
+          <a class="text-link" href="#contact">Meet us over a quick chat <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
       </div>
     </section>
@@ -240,8 +277,10 @@
     <section class="section" id="where" aria-labelledby="where-title">
       <div class="wrap reach-wrap">
         <div>
+          <p class="eyebrow">Where we go</p>
           <h2 class="h2" id="where-title">We’re based in Nellore, but we travel too.</h2>
           <p class="lede">We take up shoots across Andhra Pradesh, Telangana, and Chennai. So even if you’re not in Nellore, feel free to reach out.</p>
+          <a class="btn btn--solid" href="#contact">Check your date <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </div>
         <div class="reach" role="img" aria-label="Based in Nellore, shooting across Andhra Pradesh, Telangana and Chennai">
           <div class="reach__ring"></div>
@@ -258,6 +297,7 @@
     <!-- GET IN TOUCH -->
     <section class="section section--brand contact" id="contact" aria-labelledby="contact-title">
       <div class="wrap">
+        <p class="eyebrow">Let’s make something lasting</p>
         <h2 class="h2" id="contact-title">Have something coming up?</h2>
         <p class="lede">Tell us what you’re planning and when. We’ll take it from there.</p>
 
@@ -270,53 +310,23 @@
           </a>
         </div>
 
-        <form class="form" id="enquiry" novalidate>
-          <div class="field">
-            <label for="f-type">What are you planning?</label>
-            <select id="f-type" name="type">
-              <option>Wedding</option>
-              <option>Baby shoot</option>
-              <option>Corporate shoot</option>
-              <option>Maternity shoot</option>
-              <option>Something else</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="f-date">When?</label>
-            <input id="f-date" name="date" type="date">
-          </div>
-          <div class="field field--full">
-            <label for="f-name">Your name</label>
-            <input id="f-name" name="name" type="text" placeholder="Your name" autocomplete="name" required aria-describedby="f-name-err">
-            <span class="field__err" id="f-name-err" role="alert"></span>
-          </div>
-          <button class="btn btn--cream" type="submit">Send on WhatsApp</button>
-          <p class="form__note">This opens WhatsApp with your details filled in. Nothing is stored on this page.</p>
-        </form>
+        <p class="contact__note">No long forms. Just tell us what you’re planning and we’ll reply on WhatsApp.</p>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="wrap">
-      <svg class="footer__logo" aria-hidden="true"><use href="#logo-mark"/></svg>
-      <svg class="footer__word" role="img" aria-label="Bharani Studio"><use href="#logo-word"/></svg>
-      <div class="footer__lines">
-        <p>Photography &amp; Cinematography · Since 1985</p>
-        <p>Nellore, Andhra Pradesh</p>
-      </div>
-      <nav class="footer__links" aria-label="Footer">
+  <div class="micro-footer">
+    <div class="wrap micro-footer__in">
+      <span>© <span id="year">2026</span> Bharani Studio · Nellore</span>
+      <nav aria-label="Footer">
         <a href="https://instagram.com/bharanistudionellore" target="_blank" rel="noopener" data-track="instagram_click" data-label="footer">Instagram</a>
-        <a href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20enquire%20about%20a%20photoshoot." data-track="whatsapp_click" data-label="footer">WhatsApp</a>
-        <a href="#contact">Contact</a>
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=Bharani+Studio+Nellore" target="_blank" rel="noopener" data-track="map_click" data-label="footer">Google location</a>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=Bharani+Studio+Nellore" target="_blank" rel="noopener" data-track="map_click" data-label="footer">Location</a>
       </nav>
-      <p class="footer__copy">© <span id="year">2026</span> Bharani Studio, Nellore</p>
     </div>
-  </footer>
+  </div>
 
-  <!-- Sticky action bar for phones: appears once the hero buttons scroll away -->
-  <div class="dock" id="dock">
+  <!-- Sticky action bar: intentionally visible from the first frame to the last -->
+  <div class="dock is-on" id="dock">
     <a class="btn btn--cream dock__wa" href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20book%20a%20shoot.%20Could%20you%20share%20your%20availability%3F" data-track="whatsapp_click" data-label="dock_whatsapp">
       <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Chat on WhatsApp
     </a>

@@ -7,6 +7,7 @@
 
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  document.documentElement.classList.add('js');
 
   /* ---------- Ad tracking helpers ----------
      Sends the same event to GTM (dataLayer), GA4 (gtag) and Meta Pixel (fbq)
@@ -59,21 +60,45 @@
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();
 
-  /* ---------- Sticky action bar (phones) ----------
-     Visible once the hero buttons have scrolled away, hidden again when the
-     contact section is on screen (it has its own buttons). */
+  /* ---------- Sticky action bar ----------
+     It is intentionally persistent for ad traffic, so visitors can start a
+     WhatsApp conversation from any section of the landing page. */
   const dock = $('#dock');
-  const heroActions = $('#hero-actions');
-  const contact = $('#contact');
-  if (dock && heroActions && contact && 'IntersectionObserver' in window) {
-    let heroVisible = true;
-    let contactVisible = false;
-    const update = () => dock.classList.toggle('is-on', !heroVisible && !contactVisible);
-    new IntersectionObserver(([en]) => { heroVisible = en.isIntersecting; update(); }).observe(heroActions);
-    new IntersectionObserver(([en]) => { contactVisible = en.isIntersecting; update(); }, { threshold: 0.15 }).observe(contact);
-  } else if (dock) {
-    dock.classList.add('is-on');
+  if (dock) dock.classList.add('is-on');
+
+  /* ---------- Section reveal ---------- */
+  const revealItems = $$('.section__head, .review-carousel, .gallery, .svc-list, .about__photo, .about__text, .reach-wrap > div, .contact__actions');
+  revealItems.forEach((item) => item.classList.add('reveal'));
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    revealItems.forEach((item) => revealObserver.observe(item));
+  } else {
+    revealItems.forEach((item) => item.classList.add('is-visible'));
   }
+
+  /* ---------- Portfolio filters ---------- */
+  const filterButtons = $$('.filter-btn');
+  const galleryTiles = $$('#gallery .tile');
+  filterButtons.forEach((button) => button.addEventListener('click', () => {
+    const filter = button.dataset.filter;
+    filterButtons.forEach((item) => {
+      const active = item === button;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-selected', String(active));
+    });
+    galleryTiles.forEach((tile) => {
+      const visible = filter === 'all' || tile.dataset.category === filter;
+      tile.classList.toggle('is-hidden', !visible);
+      tile.setAttribute('aria-hidden', String(!visible));
+    });
+    track('gallery_filter', { label: filter });
+  }));
 
   /* ---------- Gallery lightbox ---------- */
   const tiles = $$('#gallery .tile');
@@ -84,18 +109,21 @@
     let index = 0;
 
     const show = (i) => {
-      index = (i + tiles.length) % tiles.length;
-      const t = tiles[index];
+      const visibleTiles = tiles.filter((tile) => !tile.classList.contains('is-hidden'));
+      if (!visibleTiles.length) return;
+      index = (i + visibleTiles.length) % visibleTiles.length;
+      const t = visibleTiles[index];
       img.src = t.dataset.full;
       img.alt = $('img', t).alt;
-      cap.textContent = `${t.dataset.cap} · ${index + 1} of ${tiles.length}`;
+      cap.textContent = `${t.dataset.cap} · ${index + 1} of ${visibleTiles.length}`;
       // warm the next photo so swiping feels instant
-      new Image().src = tiles[(index + 1) % tiles.length].dataset.full;
+      new Image().src = visibleTiles[(index + 1) % visibleTiles.length].dataset.full;
     };
 
-    tiles.forEach((t, i) => t.addEventListener('click', () => {
+    tiles.forEach((t) => t.addEventListener('click', () => {
       if (typeof lb.showModal !== 'function') { window.open(t.dataset.full, '_blank', 'noopener'); return; }
-      show(i);
+      const visibleTiles = tiles.filter((tile) => !tile.classList.contains('is-hidden'));
+      show(visibleTiles.indexOf(t));
       lb.showModal();
       track('gallery_open', { label: t.dataset.cap });
     }));
@@ -118,6 +146,50 @@
       if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
       startX = null;
     });
+  }
+
+  /* ---------- Review carousel ---------- */
+  const reviewSlides = $$('.review-slide');
+  const reviewDots = $$('.review-dot');
+  const reviewPause = $('#review-pause');
+  if (reviewSlides.length && reviewDots.length) {
+    let reviewIndex = 0;
+    let reviewTimer = null;
+    let reviewPaused = false;
+
+    const showReview = (nextIndex) => {
+      reviewIndex = (nextIndex + reviewSlides.length) % reviewSlides.length;
+      reviewSlides.forEach((slide, index) => {
+        const active = index === reviewIndex;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      reviewDots.forEach((dot, index) => {
+        const active = index === reviewIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-selected', String(active));
+      });
+    };
+    const startReviewTimer = () => {
+      window.clearInterval(reviewTimer);
+      if (!reviewPaused && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        reviewTimer = window.setInterval(() => showReview(reviewIndex + 1), 5600);
+      }
+    };
+    reviewDots.forEach((dot) => dot.addEventListener('click', () => {
+      showReview(Number(dot.dataset.reviewTo));
+      startReviewTimer();
+    }));
+    if (reviewPause) {
+      reviewPause.addEventListener('click', () => {
+        reviewPaused = !reviewPaused;
+        reviewPause.setAttribute('aria-pressed', String(reviewPaused));
+        reviewPause.setAttribute('aria-label', reviewPaused ? 'Play review rotation' : 'Pause review rotation');
+        reviewPause.textContent = reviewPaused ? '▶' : 'Ⅱ';
+        startReviewTimer();
+      });
+    }
+    startReviewTimer();
   }
 
   /* ---------- Enquiry form -> WhatsApp ---------- */

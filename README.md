@@ -35,7 +35,7 @@ Want to swap a photo? Replace the `src` (and `data-full` for gallery tiles) in `
 | --- | --- |
 | Copy, buttons, links | `index.html` (each section is commented) |
 | WhatsApp number | `index.html` (search `919908996227`) and `WHATSAPP_NUMBER` at the top of `assets/js/main.js` |
-| Client names under reviews | `index.html`, the `<footer>` inside each `.quote` (currently generic labels) |
+| Review copy and bylines | `index.html`, the `.review-slide` blocks in the review carousel |
 | Colours | `assets/css/styles.css`, the `:root` tokens at the top |
 | Theme | `<html data-theme="earthy">` → `"olive"` or `"light"` (your other two mockups) |
 | Open Graph image URL | `index.html`, replace `YOUR-DOMAIN` after you deploy |
@@ -43,8 +43,8 @@ Want to swap a photo? Replace the `src` (and `data-full` for gallery tiles) in `
 ## Ads and tracking
 
 - Paste your Meta Pixel / Google tag / GTM snippet where the comment in `<head>` says so.
-- Clicks and the form send events automatically to `dataLayer`, `gtag` and `fbq` if present:
-  `whatsapp_click`, `call_click`, `form_submit`, `gallery_open`, `cta_click`, `instagram_click`, `map_click`.
+- Clicks and portfolio filters send events automatically to `dataLayer`, `gtag` and `fbq` if present:
+  `whatsapp_click`, `call_click`, `gallery_filter`, `gallery_open`, `cta_click`, `instagram_click`, `map_click`.
   Each carries a `label` saying which button it was.
 - If the ad URL has `utm_source` / `utm_campaign`, those are added to the WhatsApp message
   ("via instagram / diwali-offer") so the studio can see which ad a chat came from.
@@ -62,7 +62,7 @@ index.html
 assets/
   css/styles.css
   js/main.js
-  fonts/        Gloock (headings) + Hanken Grotesk (text), self-hosted
+  fonts/        Hanken Grotesk (headings and text) + Gloock (editorial quotes), self-hosted
   img/          logo (vector), favicon, share image, photos/ after localising
 scripts/
   serve.mjs             local preview server
