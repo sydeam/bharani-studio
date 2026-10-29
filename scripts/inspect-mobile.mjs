@@ -56,11 +56,64 @@ if (reference) {
   await page.locator('img[src]').evaluateAll(async imgs => {
     await Promise.all(imgs.map(img => { img.loading = 'eager'; return img.decode(); }));
   });
-  for (const width of [320, 360, 390, 430, 768, 1440]) {
+  const activeReview = () => page.locator('.review-slide.is-active').getAttribute('data-review');
+  const frontHero = () => page.locator('.hero__media [data-hero-slot="front"] img').getAttribute('src');
+  assert.equal(await page.locator('#review-pause, #hero-pause').count(), 0);
+  const initialReview = Number(await activeReview());
+  const initialHero = await frontHero();
+  await page.waitForTimeout(3100);
+  assert.equal(Number(await activeReview()), (initialReview + 1) % 4, 'Reviews must autoplay after three seconds');
+  assert.equal(await frontHero(), initialHero, 'Hero photos must stay still until tapped');
+  console.log('PASS three-second review autoplay without pause controls; hero has no autoplay');
+  const selectedWidths = process.argv.find(arg => arg.startsWith('--width='))?.split('=')[1].split(',').map(Number);
+  for (const width of selectedWidths || [320, 360, 390, 430, 768, 1440]) {
     await page.setViewportSize({ width, height: 844 });
     await scrollTo(0);
     await assertWidth(`${width}px hero`);
     assert.equal(await page.locator('.nav a:visible').count(), 3);
+    const rearPhotos = await page.locator('.hero__media [data-hero-slot]:not([data-hero-slot="front"])').evaluateAll(cards => cards.map(card => {
+      const image = card.querySelector('img');
+      const bounds = image.getBoundingClientRect();
+      let exposed = 0;
+      const y = bounds.y + bounds.height * 0.45;
+      for (let x = Math.max(0, bounds.x); x < Math.min(innerWidth, bounds.right); x += 2) {
+        if (document.elementFromPoint(x, y)?.closest('[data-hero-slot]') === card) exposed += 2;
+      }
+      return { exposed, loaded: image.complete && image.naturalWidth > 0 };
+    }));
+    assert(rearPhotos.every(photo => photo.loaded && photo.exposed > 15), `Both rear hero images must remain tappable: ${JSON.stringify(rearPhotos)}`);
+    const sequenceStart = await frontHero();
+    const forwardSequence = new Set([sequenceStart]);
+    for (const [index, slot] of ['left', 'left', 'left', 'right'].entries()) {
+      const target = page.locator(`.hero__media [data-hero-slot="${slot}"]`);
+      const oldFront = await frontHero();
+      const selected = await target.locator('img').getAttribute('src');
+      const otherSlot = slot === 'left' ? 'right' : 'left';
+      const otherRear = await page.locator(`[data-hero-slot="${otherSlot}"] img`).getAttribute('src');
+      const point = await target.evaluate(card => {
+        const bounds = card.getBoundingClientRect();
+        const points = [];
+        const y = bounds.y + bounds.height * 0.45;
+        for (let x = Math.max(0, bounds.x); x < Math.min(innerWidth, bounds.right); x += 2) {
+          if (document.elementFromPoint(x, y)?.closest('[data-hero-slot]') === card) points.push({ x, y });
+        }
+        return points[Math.floor(points.length / 2)];
+      });
+      assert(point, 'A visible part of the rear image must accept taps');
+      await page.touchscreen.tap(point.x, point.y);
+      await page.waitForTimeout(750);
+      assert.equal(await frontHero(), selected, 'Tapped rear photograph must become the main image');
+      assert.equal(await page.locator(`[data-hero-slot="${otherSlot}"] img`).getAttribute('src'), oldFront, 'Previous main image must rotate into the opposite rear slot');
+      assert.equal(await page.locator(`[data-hero-slot="${slot}"] img`).getAttribute('src'), otherRear, 'Other rear photo must rotate into the tapped rear slot');
+      if (index < 2) forwardSequence.add(await frontHero());
+      if (index === 2) {
+        assert.equal(forwardSequence.size, 3, 'Consecutive left taps must feature all three photos');
+        assert.equal(await frontHero(), sequenceStart, 'Three left taps must complete the 1-2-3-1 cycle');
+      }
+      assert.equal(await page.locator('.hero__media [aria-pressed="true"]').count(), 1);
+      await assertWidth(`Hero rotation ${index + 1}`);
+      if (width === 390) await page.screenshot({ path: `.preview/hero-tap-${index + 1}-mobile.png` });
+    }
     const dock = await page.locator('#dock').boundingBox();
     assert(dock.y + dock.height <= 845 && dock.x >= 0, `Dock must remain fully visible at ${width}px: ${JSON.stringify(dock)}; ${JSON.stringify(await page.evaluate(() => ({width: innerWidth, height: innerHeight, scroll: document.documentElement.scrollWidth})))}`);
     const start = await page.locator('#moments').evaluate(el => el.offsetTop);

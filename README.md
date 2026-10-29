@@ -73,8 +73,11 @@ scripts/
   inspect-mobile.mjs    browser screenshots and responsive checks (optional Playwright)
 ```
 
-The photo spread follows native scrolling and respects reduced motion. Reviews
-start paused, support swipe, arrows, dots, and optional automatic rotation. All
+Tap a rear hero photo to rotate all three photos into new positions. Repeated left
+taps cycle 1 → 2 → 3 → 1; right taps reverse the cycle. Hero images do not autoplay.
+The photo spread uses the original scroll timing, section height, easing, and lazy image loading from commit `29108f7`,
+follows native scrolling, and respects reduced motion. Reviews
+autoplay every three seconds, with swipe, arrows, and dots. All
 four reviews use the supplied document's copy. Corporate images were not supplied;
 the Corporate filter offers a WhatsApp request rather than mislabelling wedding photos.
 

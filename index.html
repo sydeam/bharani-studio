@@ -74,14 +74,14 @@
         </div>
 
         <div class="hero__media" aria-label="A few wedding memories, photographed by Bharani Studio">
-          <figure class="hero__side hero__side--left"><img src="assets/img/instagram/studio-05.jpg" alt="A black-and-white portrait of a couple holding hands, from Bharani Studio’s Instagram" decoding="async"><figcaption>A new beginning</figcaption></figure>
-          <figure class="hero__side hero__side--right"><img src="assets/img/photos/wedding-7.webp" alt="A bride glancing back during her wedding rituals" decoding="async"><figcaption>The little moments</figcaption></figure>
-          <div class="arch">
+          <button type="button" class="hero__side hero__side--left" data-hero-slot="left" aria-label="Bring the black-and-white couple portrait to the front" aria-pressed="false"><img src="assets/img/instagram/studio-05.jpg" alt="A black-and-white portrait of a couple holding hands, from Bharani Studio’s Instagram" decoding="async"><span class="hero__caption">A new beginning</span></button>
+          <button type="button" class="hero__side hero__side--right" data-hero-slot="right" aria-label="Bring the wedding ceremony portrait to the front" aria-pressed="false"><img src="assets/img/photos/wedding-7.webp" alt="A bride glancing back during her wedding rituals" decoding="async"><span class="hero__caption">The little moments</span></button>
+          <button type="button" class="arch" data-hero-slot="front" aria-label="Bring the bridal portrait to the front" aria-pressed="true">
             <img src="assets/img/photos/wedding-1.webp"
                  alt="Wedding photograph by Bharani Studio, Nellore" fetchpriority="high" decoding="async">
-          </div>
+          </button>
           <span class="hero__photo-note">A day. A feeling. Forever.</span>
-          <span class="hero__frame-label">BHARANI STUDIO <span>01 — THE WEDDING EDIT</span></span>
+          <div class="hero__frame-label"><span>BHARANI STUDIO</span><span data-hero-label>01 — THE WEDDING EDIT</span></div>
         </div>
       </div>
     </section>
@@ -158,7 +158,6 @@
             <button class="review-dot" type="button" aria-pressed="false" aria-label="Show review 4" data-review-to="3"></button>
           </div>
           <button class="review-arrow" id="review-next" type="button" aria-label="Next review">→</button>
-          <button class="review-pause" id="review-pause" type="button" aria-label="Pause review rotation" aria-pressed="false">Ⅱ</button>
         </div>
       </div>
     </section>

@@ -7,6 +7,23 @@
   document.documentElement.classList.add('js');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  /* ---------- Hero: tap a rear photo to rotate all three positions ---------- */
+  const heroMedia = $('.hero__media');
+  if (heroMedia) {
+    const heroCards = [$('.arch', heroMedia), $('.hero__side--left', heroMedia), $('.hero__side--right', heroMedia)];
+    const heroLabel = $('[data-hero-label]', heroMedia);
+    const showHero = (nextIndex) => {
+      const selected = heroCards[nextIndex];
+      if (selected.dataset.heroSlot === 'front') return;
+      heroCards.forEach((card, index) => {
+        card.dataset.heroSlot = ['front', 'left', 'right'][(index - nextIndex + heroCards.length) % heroCards.length];
+        card.setAttribute('aria-pressed', String(index === nextIndex));
+      });
+      if (heroLabel) heroLabel.textContent = `${String(nextIndex + 1).padStart(2, '0')} — THE WEDDING EDIT`;
+    };
+    heroCards.forEach((card, index) => card.addEventListener('click', () => showHero(index)));
+  }
+
   /* ---------- Ad tracking helpers ----------
      Sends the same event to GTM (dataLayer), GA4 (gtag) and Meta Pixel (fbq)
      if those scripts are on the page. Safe to run with none of them. */
@@ -197,14 +214,12 @@
     });
   }
 
-  /* ---------- Reviews: manual/swipe controls and opt-in auto rotation ---------- */
+  /* ---------- Reviews: three-second autoplay with arrows, dots, and swipe ---------- */
   const reviewSlides = $$('.review-slide');
   const reviewDots = $$('.review-dot');
-  const reviewPause = $('#review-pause');
   if (reviewSlides.length && reviewDots.length) {
     let reviewIndex = 0;
     let reviewTimer = null;
-    let reviewPaused = true;
     const reviewCarousel = $('#review-carousel');
 
     const showReview = (nextIndex) => {
@@ -226,26 +241,14 @@
     };
     const startReviewTimer = () => {
       window.clearInterval(reviewTimer);
-      if (!reviewPaused && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        reviewTimer = window.setInterval(() => showReview(reviewIndex + 1), 5600);
+      if (!reducedMotion.matches && !document.hidden) {
+        reviewTimer = window.setInterval(() => showReview(reviewIndex + 1), 3000);
       }
     };
     reviewDots.forEach((dot) => dot.addEventListener('click', () => {
       showReview(Number(dot.dataset.reviewTo));
       startReviewTimer();
     }));
-    if (reviewPause) {
-      reviewPause.setAttribute('aria-pressed', 'true');
-      reviewPause.setAttribute('aria-label', 'Play review rotation');
-      reviewPause.textContent = '▶';
-      reviewPause.addEventListener('click', () => {
-        reviewPaused = !reviewPaused;
-        reviewPause.setAttribute('aria-pressed', String(reviewPaused));
-        reviewPause.setAttribute('aria-label', reviewPaused ? 'Play review rotation' : 'Pause review rotation');
-        reviewPause.textContent = reviewPaused ? '▶' : 'Ⅱ';
-        startReviewTimer();
-      });
-    }
     $('#review-prev')?.addEventListener('click', () => { showReview(reviewIndex - 1); startReviewTimer(); });
     $('#review-next')?.addEventListener('click', () => { showReview(reviewIndex + 1); startReviewTimer(); });
     let reviewTouch = null;
