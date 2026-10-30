@@ -50,7 +50,7 @@
         </a>
         <nav class="nav" id="main-nav" aria-label="Main">
           <a class="nav__link nav__link--about" href="#about">About</a>
-          <a class="nav__link" href="#contact">Contact</a>
+          <a class="nav__link" href="#enquire">Contact</a>
           <a class="btn btn--solid btn--sm" href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20talk%20about%20a%20shoot." data-track="whatsapp_click" data-label="header_lets_talk">Let’s Talk</a>
         </nav>
       </div>
@@ -103,6 +103,43 @@
       </div>
     </section>
 
+    <!-- ENQUIRY: third section, directly before client reviews. -->
+    <section class="section section--enquiry" id="enquire" aria-labelledby="enquire-title">
+      <div class="wrap enquiry__card">
+        <div class="enquiry__intro">
+          <p class="eyebrow">Your next memory starts here</p>
+          <h2 class="h2" id="enquire-title">Let’s plan your shoot.</h2>
+          <p class="lede">Tell us what you’re planning and when. We’ll take it from there.</p>
+          <div class="contact__actions enquiry__actions">
+            <a class="btn btn--solid" href="https://wa.me/919908996227?text=Hi%20Bharani%20Studio%2C%20I%27d%20like%20to%20enquire%20about%20a%20photoshoot." data-track="whatsapp_click" data-label="enquiry_chat">Chat on WhatsApp</a>
+            <a class="btn btn--ghost" href="tel:+919908996227" data-track="call_click" data-label="enquiry_call">Give Us a Call</a>
+          </div>
+        </div>
+        <form class="booking-form" id="booking-form" action="https://wa.me/919908996227" method="get">
+          <div class="booking__field">
+            <label for="booking-type">What are you planning?</label>
+            <select id="booking-type" name="type" required>
+              <option value="Wedding">Wedding</option>
+              <option value="Baby shoot">Baby shoot</option>
+              <option value="Maternity shoot">Maternity shoot</option>
+              <option value="Corporate shoot">Corporate shoot</option>
+              <option value="Something else">Something else</option>
+            </select>
+          </div>
+          <div class="booking__field">
+            <label for="booking-date">When?</label>
+            <input id="booking-date" name="date" type="date" aria-describedby="booking-note">
+          </div>
+          <div class="booking__field booking__field--full">
+            <label for="booking-name">Your name</label>
+            <input id="booking-name" name="name" type="text" placeholder="Your name" autocomplete="name" maxlength="100" required>
+          </div>
+          <button class="btn btn--solid booking__submit" type="submit">Send on WhatsApp <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <p class="booking__note" id="booking-note">Date not decided? Leave it blank. Your details will open in WhatsApp, ready to send.</p>
+        </form>
+      </div>
+    </section>
+
     <!-- REVIEWS -->
     <section class="section section--review" id="clients" aria-labelledby="clients-title">
       <div class="wrap section__head section__head--split">
@@ -123,7 +160,7 @@
           </div>
         </div>
         <div class="review-slide" data-review="1" aria-hidden="true">
-          <div class="review-slide__media"><img loading="lazy" src="assets/img/photos/wedding-7.webp" alt="Bride looking back during wedding rituals, photographed by Bharani Studio"></div>
+          <div class="review-slide__media"><img loading="lazy" src="assets/img/photos/wedding-4.webp" alt="Bride in a red saree framed by coconut palms, photographed by Bharani Studio"></div>
           <div class="review-slide__copy">
             <p class="review-slide__kicker">02 / Wedding</p>
             <div class="quote__mark" aria-hidden="true">“</div>

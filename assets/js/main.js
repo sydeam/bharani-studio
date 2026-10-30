@@ -71,6 +71,38 @@
     });
   }
 
+  /* ---------- Enquiry form: compose a WhatsApp message, without storing it ---------- */
+  const bookingForm = $('#booking-form');
+  if (bookingForm) {
+    const bookingName = $('#booking-name');
+    const bookingDate = $('#booking-date');
+    const today = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date());
+    const datePart = type => today.find(part => part.type === type).value;
+    bookingDate.min = `${datePart('year')}-${datePart('month')}-${datePart('day')}`;
+    bookingName.addEventListener('input', () => bookingName.setCustomValidity(''));
+    bookingForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const name = bookingName.value.trim();
+      bookingName.setCustomValidity(name ? '' : 'Please enter your name.');
+      if (!bookingForm.reportValidity()) return;
+      const type = $('#booking-type').value;
+      let when = 'Not decided yet';
+      if (bookingDate.value) {
+        const [year, month, day] = bookingDate.value.split('-').map(Number);
+        when = new Date(year, month - 1, day).toLocaleDateString('en-IN', {
+          day: 'numeric', month: 'long', year: 'numeric',
+        });
+      }
+      const message = `Hi Bharani Studio, I’m ${name}.\nPlanning: ${type}\nWhen: ${when}\nCould you share your availability?${refTag()}`;
+      const destination = new URL(bookingForm.action);
+      destination.searchParams.set('text', message);
+      track('form_submit', { label: type });
+      window.location.assign(destination.toString());
+    });
+  }
+
   /* ---------- Footer year ---------- */
   const year = $('#year');
   if (year) year.textContent = new Date().getFullYear();

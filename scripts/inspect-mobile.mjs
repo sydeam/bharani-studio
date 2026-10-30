@@ -56,6 +56,61 @@ if (reference) {
   await page.locator('img[src]').evaluateAll(async imgs => {
     await Promise.all(imgs.map(img => { img.loading = 'eager'; return img.decode(); }));
   });
+  if (process.argv.includes('--form-only')) {
+    await page.goto('http://localhost:5173/?utm_source=instagram&utm_campaign=booking-test');
+    assert.deepEqual(await page.locator('main > section').evaluateAll(sections => sections.slice(0, 4).map(section => section.id)), ['', 'moments', 'enquire', 'clients']);
+    assert.match(await page.locator('[data-review="1"] img').getAttribute('src'), /wedding-4\.webp$/);
+    assert.notEqual(await page.locator('[data-review="0"] img').getAttribute('src'), await page.locator('[data-review="1"] img').getAttribute('src'));
+    for (const width of [320, 390, 1440]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.locator('#enquire').evaluate(el => el.scrollIntoView({ behavior: 'instant', block: 'start' }));
+      await assertWidth(`${width}px enquiry form`);
+      for (const selector of ['#booking-type', '#booking-date', '#booking-name', '.booking__submit']) {
+        const bounds = await page.locator(selector).boundingBox();
+        assert(bounds.width > 100 && bounds.x >= 0 && bounds.x + bounds.width <= width, `${selector} must fit the viewport`);
+      }
+      await page.locator('#enquire').screenshot({ path: `.preview/enquiry-${width}.png`, style: '#dock, .top { visibility: hidden; }' });
+      console.log(`PASS ${width}px enquiry form: correct placement, fields fit, no horizontal overflow`);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#booking-name').fill('   ');
+    await page.locator('.booking__submit').click();
+    assert.equal(await page.locator('#booking-name').evaluate(el => el.checkValidity()), false, 'Whitespace-only names must be rejected');
+    assert.equal(new URL(page.url()).hostname, 'localhost');
+    await page.locator('#booking-name').fill('Ananya & Ravi');
+    await page.locator('#booking-type').selectOption('Maternity shoot');
+    const minDate = await page.locator('#booking-date').getAttribute('min');
+    const past = new Date(`${minDate}T12:00:00Z`);
+    past.setUTCDate(past.getUTCDate() - 1);
+    await page.locator('#booking-date').fill(past.toISOString().slice(0, 10));
+    assert.equal(await page.locator('#booking-date').evaluate(el => el.checkValidity()), false, 'Past dates must be rejected');
+    const future = new Date(`${minDate}T12:00:00Z`);
+    future.setUTCDate(future.getUTCDate() + 7);
+    await page.locator('#booking-date').fill(future.toISOString().slice(0, 10));
+    // Intercept WhatsApp before any network request: verify composition only.
+    await page.route('https://wa.me/**', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>WhatsApp test destination</title>' }));
+    await Promise.all([
+      page.waitForURL(url => url.hostname === 'wa.me'),
+      page.locator('.booking__submit').click(),
+    ]);
+    const destination = new URL(page.url());
+    assert.equal(destination.pathname, '/919908996227');
+    const message = destination.searchParams.get('text');
+    assert(message.includes('Ananya & Ravi') && message.includes('Planning: Maternity shoot'));
+    assert(message.includes(future.toLocaleDateString('en-IN', { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' })));
+    assert(message.includes('via instagram / booking-test'));
+    await page.goto('http://localhost:5173/');
+    await page.locator('#booking-name').fill('Ravi');
+    await Promise.all([
+      page.waitForURL(url => url.hostname === 'wa.me'),
+      page.locator('.booking__submit').click(),
+    ]);
+    assert(new URL(page.url()).searchParams.get('text').includes('When: Not decided yet'));
+    assert.equal(errors.length, 0, errors.join('\n'));
+    console.log('PASS review replacement, form validation, future/optional dates, encoded WhatsApp details, and UTM attribution. No real WhatsApp requests sent.');
+    await browser.close();
+    process.exit(0);
+  }
   const activeReview = () => page.locator('.review-slide.is-active').getAttribute('data-review');
   const frontHero = () => page.locator('.hero__media [data-hero-slot="front"] img').getAttribute('src');
   assert.equal(await page.locator('#review-pause, #hero-pause').count(), 0);

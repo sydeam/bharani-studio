@@ -47,7 +47,7 @@ Want to swap a photo? Replace the `src` (and `data-full` for gallery tiles) in `
 
 - Paste your Meta Pixel / Google tag / GTM snippet where the comment in `<head>` says so.
 - Clicks and portfolio filters send events automatically to `dataLayer`, `gtag` and `fbq` if present:
-  `whatsapp_click`, `call_click`, `gallery_filter`, `gallery_open`, `cta_click`, `instagram_click`, `map_click`.
+  `whatsapp_click`, `call_click`, `form_submit`, `gallery_filter`, `gallery_open`, `cta_click`, `instagram_click`, `map_click`.
   Each carries a `label` saying which button it was.
 - If the ad URL has `utm_source` / `utm_campaign`, those are added to the WhatsApp message
   ("via instagram / diwali-offer") so the studio can see which ad a chat came from.
@@ -84,3 +84,10 @@ the Corporate filter offers a WhatsApp request rather than mislabelling wedding 
 For browser QA, use an existing Playwright installation (or set `BHARANI_PLAYWRIGHT`
 to its `index.mjs` path), start the local server, and run `node scripts/inspect-mobile.mjs`.
 Screenshots are saved to the ignored `.preview/` folder.
+
+The third section (`#enquire`) contains the enquiry form, immediately before reviews.
+It asks for the shoot type, optional date, and name. Submission opens WhatsApp with
+these details and the ad attribution filled in; the page does not store form data.
+Use `node scripts/inspect-mobile.mjs --form-only` to check the form's responsive
+layout, required-name and date validation, and generated WhatsApp messages without
+sending any real messages.

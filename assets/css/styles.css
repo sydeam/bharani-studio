@@ -112,6 +112,29 @@ em { font-style: normal; color: var(--brand); }
 .section--deep .lede, .section--brand .lede { color: var(--on-dark-soft); }
 .section__cta { display: flex; justify-content: center; margin-top: 32px; }
 
+/* A short enquiry form, placed before the reviews. */
+.section--enquiry { padding-block: 60px; background: #f3e9e7; }
+.enquiry__card { max-width: 760px; padding: clamp(24px, 5vw, 48px); border: 1px solid #e6d5d7; border-radius: 24px; background: #fffaf7; box-shadow: 0 14px 36px #7d2e4308; }
+.enquiry__intro { text-align: center; }
+.enquiry__intro .lede { margin-inline: auto; }
+.enquiry__actions { gap: 10px; }
+.enquiry__card .enquiry__actions .btn { flex: 0 1 auto; padding-inline: 20px; font-size: 12px; }
+.booking-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 16px; margin-top: 32px; padding-top: 30px; border-top: 1px solid var(--line); }
+.booking__field { display: grid; min-width: 0; gap: 8px; }
+.booking__field label { color: var(--text); font-size: 12px; font-weight: 600; }
+.booking__field input, .booking__field select { display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 50px; padding: 12px; border: 1px solid #d6c0c5; border-radius: 10px; background: #fff; color: var(--text); font: 400 16px/1.4 var(--font-body); color-scheme: light; }
+.booking__field input::placeholder { color: var(--text-soft); }
+.booking__field input:focus, .booking__field select:focus { border-color: var(--brand); outline: 2px solid #7d2e4326; outline-offset: 2px; }
+.booking__field input[type="date"] { -webkit-appearance: none; appearance: none; }
+.booking__field input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+.booking__field--full, .booking__submit, .booking__note { grid-column: 1 / -1; }
+.booking__submit { justify-self: start; }
+.booking__note { color: var(--text-soft); font-size: 11px; line-height: 1.7; }
+@media (max-width: 379px) {
+  .booking-form { grid-template-columns: minmax(0, 1fr); }
+  .enquiry__actions .btn { width: 100%; }
+}
+
 /* Review photographs never crop or zoom, regardless of original orientation. */
 .section--review { background: #fff; }
 .section--review .text-link--light { color: var(--brand); }
