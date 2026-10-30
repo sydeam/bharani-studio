@@ -149,8 +149,10 @@
       const spread = Math.max(0, Math.min(1, (progress - 0.02) / 0.8));
       const eased = 1 - Math.pow(1 - spread, 3);
       cards.forEach((card, index) => {
-        const x = Number(card.dataset.x) * stage.clientWidth / 100 * eased;
-        const y = Number(card.dataset.y) * stage.clientHeight / 100 * eased;
+        // Desktop gets its own endpoints; mobile and the scroll timing stay unchanged.
+        const layout = getComputedStyle(card);
+        const x = Number(layout.getPropertyValue('--spread-x').trim() || card.dataset.x) * stage.clientWidth / 100 * eased;
+        const y = Number(layout.getPropertyValue('--spread-y').trim() || card.dataset.y) * stage.clientHeight / 100 * eased;
         const rotation = Number(card.dataset.rotate) * (0.35 + 0.65 * eased);
         const scale = 1.45 - 0.45 * eased;
         card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotation}deg) scale(${scale})`;

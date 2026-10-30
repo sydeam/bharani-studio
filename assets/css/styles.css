@@ -128,7 +128,7 @@ em { font-style: normal; color: var(--brand); }
 .booking__field input[type="date"] { -webkit-appearance: none; appearance: none; }
 .booking__field input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 .booking__field--full, .booking__submit, .booking__note { grid-column: 1 / -1; }
-.booking__submit { justify-self: start; }
+.booking__submit { justify-self: center; }
 .booking__note { color: var(--text-soft); font-size: 11px; line-height: 1.7; }
 @media (max-width: 379px) {
   .booking-form { grid-template-columns: minmax(0, 1fr); }
@@ -302,8 +302,19 @@ em { font-style: normal; color: var(--brand); }
   .about__grid { grid-template-columns: minmax(0,.8fr) minmax(0,1fr); align-items: center; gap: 70px; }
   .reach-wrap { grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: 40px; }
   .reach-wrap > div:first-child { text-align: left; }
-  .moments__words h2 { font-size: clamp(40px,5vw,64px); }
-  .moments__eyebrow { font-size: 10px; }
+  /* Give desktop photos a bounded stage, separate from the caption and CTA.
+     Size against both stage dimensions so short laptop screens stay clear too. */
+  .moments__sticky { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; justify-content: normal; justify-items: center; align-items: stretch; gap: 18px; min-height: 0; padding-block: 20px; }
+  .moments__stage { width: min(calc(100% - 64px), 1200px); height: 100%; min-height: 0; max-height: none; container-type: size; }
+  .moments__words { inset: 0 0 30%; }
+  .moments__words h2 { font-size: min(5.2cqw, 10.5cqh, 60px); }
+  .moments__eyebrow { max-width: none; font-size: 10px; }
+  .moments .memory { width: min(16cqw, 31cqh, 180px); }
+  .moments .memory--1 { --spread-x: -34; --spread-y: -24; }
+  .moments .memory--2 { --spread-x: 34; --spread-y: -24; }
+  .moments .memory--3 { --spread-x: -36; --spread-y: 24; }
+  .moments .memory--4 { --spread-x: 36; --spread-y: 24; }
+  .moments .memory--5 { --spread-x: 0; --spread-y: 29; width: min(14cqw, 24cqh, 150px); }
   .moments__bottom > span { font-size: 12px; }
   .moments__bottom .text-link { font-size: 13px; }
 }
